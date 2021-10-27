@@ -1,13 +1,13 @@
 name: Deploy to Firebase Hosting on main
-"on":
+
+on:
   push:
-    branches:
-      - main
+    branches: [main]
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Github Action
       - uses: actions/checkout@v2
 
       - name: Flutter Action
