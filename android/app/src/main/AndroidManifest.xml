@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jarjut.message_map">
+    package="com.jarjut.geo_tagging">
    <application
-        android:label="message_map"
+        android:label="geo_tagging"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

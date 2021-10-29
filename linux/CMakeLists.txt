@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "message_map")
-set(APPLICATION_ID "com.jarjut.message_map")
+set(BINARY_NAME "geo_tagging")
+set(APPLICATION_ID "com.jarjut.geo_tagging")
 
 cmake_policy(SET CMP0063 NEW)
 
