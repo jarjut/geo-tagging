@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geo_tagging/repository/message_repository.dart';
 
 import 'app/app.dart';
 import 'app/bloc/app_bloc.dart';
@@ -11,9 +12,12 @@ void main() async {
   Bloc.observer = AppBlocObserver();
   await Firebase.initializeApp();
   runApp(
-    BlocProvider(
-      create: (context) => AppBloc()..add(AppStart()),
-      child: const App(),
+    RepositoryProvider(
+      create: (context) => MessageRepository(),
+      child: BlocProvider(
+        create: (context) => AppBloc()..add(AppStart()),
+        child: const App(),
+      ),
     ),
   );
 }

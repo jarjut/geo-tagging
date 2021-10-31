@@ -15,6 +15,7 @@ class MessageRepository {
 
   Stream<List<Message>> streamMessages() {
     return _messageRef
+        .orderBy('created')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }

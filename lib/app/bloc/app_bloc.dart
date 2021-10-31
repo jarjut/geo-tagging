@@ -9,8 +9,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppInitial()) {
     on<AppStart>((event, emit) async {
       Location location = Location();
-      bool _serviceEnabled = await checkLocationService(location);
-      PermissionStatus _permissionStatus = await getPermissionStatus(location);
+      bool _serviceEnabled = await location.serviceEnabled();
+      PermissionStatus _permissionStatus = await location.hasPermission();
 
       emit(AppLoaded(
         location: location,

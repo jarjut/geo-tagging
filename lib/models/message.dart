@@ -4,19 +4,21 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'message.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Message extends Equatable {
   final String? id;
   final String message;
   final double latitude;
   final double longitude;
+  final DateTime created;
 
-  const Message({
+  Message({
     this.id,
     required this.message,
     required this.latitude,
     required this.longitude,
-  });
+    DateTime? created,
+  }) : created = created ?? DateTime.now();
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);
