@@ -9,14 +9,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppInitial()) {
     on<AppStart>((event, emit) async {
       Location location = Location();
-      bool _serviceEnabled = await location.serviceEnabled();
-      PermissionStatus _permissionStatus = await location.hasPermission();
+      try {
+        bool _serviceEnabled = await location.serviceEnabled();
+        PermissionStatus _permissionStatus = await location.hasPermission();
 
-      emit(AppLoaded(
-        location: location,
-        locationServiceEnabled: _serviceEnabled,
-        locationPermissionStatus: _permissionStatus,
-      ));
+        emit(AppLoaded(
+          location: location,
+          locationServiceEnabled: _serviceEnabled,
+          locationPermissionStatus: _permissionStatus,
+        ));
+      } catch (e) {
+        // ignore: avoid_print
+        print(e);
+        emit(AppLoaded(
+          location: location,
+          locationServiceEnabled: false,
+          locationPermissionStatus: PermissionStatus.denied,
+        ));
+      }
     });
 
     on<AppRequestLocationService>((event, emit) async {
