@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:location/location.dart';
@@ -8,54 +10,33 @@ part 'app_state.dart';
 class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppInitial()) {
     on<AppStart>((event, emit) async {
-      Location location = Location();
       try {
-        bool _serviceEnabled = await location.serviceEnabled();
-        PermissionStatus _permissionStatus = await location.hasPermission();
+        Location location = Location();
+        final locationData = await location.getLocation();
 
         emit(AppLoaded(
-          location: location,
-          locationServiceEnabled: _serviceEnabled,
-          locationPermissionStatus: _permissionStatus,
+          locationData: locationData,
+          hasPermission: true,
         ));
       } catch (e) {
-        // ignore: avoid_print
-        print(e);
-        emit(AppLoaded(
-          location: location,
-          locationServiceEnabled: false,
-          locationPermissionStatus: PermissionStatus.denied,
-        ));
+        log('Error get Location Data', error: e);
+        emit(const AppLoaded());
       }
     });
 
-    on<AppRequestLocationService>((event, emit) async {
-      Location location = Location();
-      bool _serviceEnabled = await checkLocationService(location);
-      PermissionStatus _permissionStatus = await getPermissionStatus(location);
+    on<AppCheckLocationPermission>((event, emit) async {
+      try {
+        Location location = Location();
+        final locationData = await location.getLocation();
 
-      emit(AppLoaded(
-        location: location,
-        locationServiceEnabled: _serviceEnabled,
-        locationPermissionStatus: _permissionStatus,
-      ));
+        emit(AppLoaded(
+          locationData: locationData,
+          hasPermission: true,
+        ));
+      } catch (e) {
+        log('Error get Location Data', error: e);
+        emit(const AppLoaded());
+      }
     });
-  }
-
-  Future<bool> checkLocationService(Location location) async {
-    bool _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-    }
-    return _serviceEnabled;
-  }
-
-  Future<PermissionStatus> getPermissionStatus(Location location) async {
-    PermissionStatus _permissionStatus = await location.hasPermission();
-
-    if (_permissionStatus == PermissionStatus.denied) {
-      _permissionStatus = await location.requestPermission();
-    }
-    return _permissionStatus;
   }
 }

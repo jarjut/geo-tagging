@@ -4,23 +4,20 @@ abstract class AppState extends Equatable {
   const AppState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AppInitial extends AppState {}
 
 class AppLoaded extends AppState {
   const AppLoaded({
-    required this.location,
-    required this.locationServiceEnabled,
-    required this.locationPermissionStatus,
+    this.locationData,
+    this.hasPermission = false,
   });
 
-  final Location location;
-  final bool locationServiceEnabled;
-  final PermissionStatus locationPermissionStatus;
+  final LocationData? locationData;
+  final bool hasPermission;
 
   @override
-  List<Object> get props =>
-      [location, locationServiceEnabled, locationPermissionStatus];
+  List<Object?> get props => [locationData, hasPermission];
 }

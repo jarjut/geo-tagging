@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:location/location.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../app/bloc/app_bloc.dart';
@@ -22,8 +21,6 @@ class HomePage extends StatelessWidget {
         body: BlocBuilder<AppBloc, AppState>(
           builder: (context, state) {
             if (state is AppLoaded) {
-              bool locationEnabled = state.locationServiceEnabled &&
-                  state.locationPermissionStatus == PermissionStatus.granted;
               return Stack(
                 children: [
                   ScreenTypeLayout(
@@ -55,7 +52,7 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  !locationEnabled
+                  !state.hasPermission
                       ? const RequestLocation()
                       : const SizedBox.shrink(),
                 ],
@@ -101,15 +98,16 @@ class RequestLocation extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Please allow location permission'),
+                const SizedBox(height: 8.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       BlocProvider.of<AppBloc>(context)
-                          .add(AppRequestLocationService());
+                          .add(AppCheckLocationPermission());
                     },
                     child: const Text(
-                      'REQUEST PERMISSION',
+                      'CHECK PERMISSION',
                     ),
                   ),
                 ),

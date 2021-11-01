@@ -9,4 +9,4 @@ abstract class AppEvent extends Equatable {
 
 class AppStart extends AppEvent {}
 
-class AppRequestLocationService extends AppEvent {}
+class AppCheckLocationPermission extends AppEvent {}
