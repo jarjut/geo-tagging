@@ -27,15 +27,21 @@ class HomePage extends StatelessWidget {
               return Stack(
                 children: [
                   ScreenTypeLayout(
-                    mobile: Column(
-                      children: const [
-                        Flexible(
-                          flex: 4,
-                          child: MainMap(),
+                    mobile: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: MediaQuery.of(context).size.height * 4 / 9,
+                          child: const MainMap(),
                         ),
-                        Flexible(
-                          flex: 5,
-                          child: MessageSection(),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          height: MediaQuery.of(context).size.height * 5 / 9,
+                          child: const MessageSection(),
                         ),
                       ],
                     ),
