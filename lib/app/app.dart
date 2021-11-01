@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'router.dart';
+import '../view/home_page.dart';
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  final _router = AppRouter();
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Geo Tagging',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routerDelegate: _router.delegate(),
-      routeInformationParser: _router.defaultRouteParser(),
+      home: const HomePage(),
     );
   }
 }
