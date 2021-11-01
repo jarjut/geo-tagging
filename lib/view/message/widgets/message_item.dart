@@ -13,7 +13,7 @@ class MessageItem extends StatelessWidget {
         horizontal: 8.0,
         vertical: 12.0,
       ),
-      child: Text(message.message),
+      child: SelectableText(message.message),
     );
   }
 }

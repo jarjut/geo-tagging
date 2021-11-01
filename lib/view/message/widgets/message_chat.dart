@@ -27,11 +27,16 @@ class MessageChat extends StatelessWidget {
       body: BlocBuilder<MessageBloc, MessageState>(
         builder: (context, state) {
           if (state is MessageLoaded) {
-            return ListView.builder(
-              itemBuilder: (context, index) => MessageItem(
-                message: state.messages[index],
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.separated(
+                itemBuilder: (context, index) => MessageItem(
+                  message: state.messages[index],
+                ),
+                separatorBuilder: (_, __) => const Divider(),
+                reverse: true,
+                itemCount: state.messages.length,
               ),
-              itemCount: state.messages.length,
             );
           }
           return const Center(

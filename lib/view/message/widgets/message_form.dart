@@ -30,7 +30,7 @@ class _MessageFormState extends State<MessageForm> {
       if (_formKey.currentState!.validate()) {
         setState(() => _isLoading = true);
         final location = await Location().getLocation();
-        final message = _messageController.text;
+        final message = _messageController.text.trim();
 
         await context.read<MessageRepository>().addMessage(
               Message(
@@ -69,7 +69,7 @@ class _MessageFormState extends State<MessageForm> {
                   isCollapsed: true,
                 ),
                 validator: (value) {
-                  if (value == null || value == '') {
+                  if (value == null || value.trim() == '') {
                     return "Tulis Harapan Kamu";
                   }
                   return null;
