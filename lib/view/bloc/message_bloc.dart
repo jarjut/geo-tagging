@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:geo_tagging/models/message.dart';
-import 'package:geo_tagging/repository/message_repository.dart';
+
+import '../../models/message.dart';
+import '../../repository/message_repository.dart';
 
 part 'message_event.dart';
 part 'message_state.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geo_tagging/view/bloc/message_bloc.dart';
-import 'package:geo_tagging/view/message/message_provider.dart';
-import 'package:geo_tagging/view/message/widgets/message_item.dart';
 import 'package:provider/provider.dart';
-import 'package:geo_tagging/models/message.dart';
+
+import '../../bloc/message_bloc.dart';
+import '../message_provider.dart';
+import 'message_item.dart';
 
 class MessageChat extends StatelessWidget {
   const MessageChat({Key? key}) : super(key: key);

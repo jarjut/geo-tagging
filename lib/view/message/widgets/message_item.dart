@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geo_tagging/models/message.dart';
+
+import '../../../models/message.dart';
 
 class MessageItem extends StatelessWidget {
   final Message message;

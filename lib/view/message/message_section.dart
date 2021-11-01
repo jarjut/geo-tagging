@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:geo_tagging/view/message/message_provider.dart';
-import 'package:geo_tagging/view/message/widgets/message_chat.dart';
-import 'package:geo_tagging/view/message/widgets/message_input.dart';
 import 'package:provider/provider.dart';
+
+import 'message_provider.dart';
+import 'widgets/message_chat.dart';
+import 'widgets/message_input.dart';
 
 class MessageSection extends StatelessWidget {
   const MessageSection({Key? key}) : super(key: key);

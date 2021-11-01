@@ -13,12 +13,12 @@ jobs:
       - name: Flutter Action
         uses: subosito/flutter-action@v1.5.1
         with:
-          channel: beta
+          channel: master
 
       - name: Flutter Build Web
         run: flutter build web
 
-      - name: Deplot to Firebase Hosting
+      - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"

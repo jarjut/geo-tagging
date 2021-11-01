@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:geo_tagging/view/message/message_provider.dart';
-import 'package:geo_tagging/view/message/widgets/message_form.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+
+import '../message_provider.dart';
+import 'message_form.dart';
 
 class MessageInput extends StatelessWidget {
   const MessageInput({Key? key}) : super(key: key);
