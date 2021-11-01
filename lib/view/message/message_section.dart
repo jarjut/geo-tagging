@@ -15,10 +15,14 @@ class MessageSection extends StatelessWidget {
       builder: (context, _) {
         return Consumer<MessageProvider>(
           builder: (context, state, _) {
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 150),
-              child:
-                  state.isShowChat ? const MessageChat() : const MessageInput(),
+            return Container(
+              color: Colors.white,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 150),
+                child: state.isShowChat
+                    ? const MessageChat()
+                    : const MessageInput(),
+              ),
             );
           },
         );
