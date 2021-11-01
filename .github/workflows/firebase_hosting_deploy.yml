@@ -12,6 +12,8 @@ jobs:
 
       - name: Flutter Action
         uses: subosito/flutter-action@v1.5.1
+        with:
+          channel: beta
 
       - name: Flutter Build Web
         run: flutter build web
