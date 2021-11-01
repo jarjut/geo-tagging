@@ -16,7 +16,7 @@ jobs:
           channel: master
 
       - name: Flutter Build Web
-        run: flutter build web
+        run: flutter build web --web-renderer html
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
