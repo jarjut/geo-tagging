@@ -15,6 +15,5 @@ class MessageUpdated extends MessageEvent {
   const MessageUpdated(this.messages);
 
   @override
-  // TODO: implement props
   List<Object> get props => [messages];
 }
