@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -30,25 +29,12 @@ class MessageSection extends StatelessWidget {
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/logo-tbig.png',
+                    'assets/logo-tbighut-17.png',
                     height: getValueForScreenType<double>(
                       context: context,
-                      mobile: 32.0,
-                      desktop: 64.0,
+                      mobile: 64.0,
+                      desktop: 140.0,
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    '17Th TBIG Anniversary',
-                    style: GoogleFonts.montserrat(
-                      fontSize: getValueForScreenType<double>(
-                        context: context,
-                        mobile: 16.0,
-                        desktop: 28.0,
-                      ),
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8.0),
                   Expanded(
