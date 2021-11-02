@@ -65,6 +65,7 @@ class MainMapState extends State<MainMap> {
                 northeast: const LatLng(12, 140),
               ),
             ),
+            minMaxZoomPreference: const MinMaxZoomPreference(null, 6),
             initialCameraPosition: const CameraPosition(
               target: LatLng(0.7893, 113.9213),
             ),
