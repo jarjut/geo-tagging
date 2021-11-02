@@ -97,7 +97,7 @@ class RequestLocation extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Please allow location permission'),
+                const Text('Please turn on and allow location permission'),
                 const SizedBox(height: 8.0),
                 SizedBox(
                   width: double.infinity,
