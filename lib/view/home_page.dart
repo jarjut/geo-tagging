@@ -23,8 +23,8 @@ class HomePage extends StatelessWidget {
             if (state is AppLoaded) {
               return Stack(
                 children: [
-                  ScreenTypeLayout(
-                    mobile: Stack(
+                  ScreenTypeLayout.builder(
+                    mobile: (context) => Stack(
                       children: [
                         Positioned(
                           top: 0,
@@ -42,10 +42,10 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    desktop: Row(
+                    desktop: (context) => Row(
                       children: const [
                         SizedBox(
-                          width: 300,
+                          width: 320,
                           child: MessageSection(),
                         ),
                         Expanded(child: MainMap()),

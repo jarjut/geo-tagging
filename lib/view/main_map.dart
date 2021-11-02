@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geo_tagging/models/message.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 import '../../consts.dart';
@@ -22,50 +23,61 @@ class MainMapState extends State<MainMap> {
     _mapController = controller;
   }
 
-  void _onStyleLoaded() async {
+  void _onStyleLoaded(List<Message> messages) async {
     final ByteData bytes = await rootBundle.load('assets/marker.png');
     final Uint8List list = bytes.buffer.asUint8List();
-    return _mapController!.addImage('AppMarker', list);
+    _mapController?.addImage('AppMarker', list);
+    _updateSymbols(messages);
   }
 
-  @override
-  void dispose() {
-    _mapController?.dispose();
-    super.dispose();
+  Future<void> _updateSymbols(
+    List<Message> messages,
+  ) async {
+    final symbols = messages
+        .map((m) => SymbolOptions(
+              geometry: LatLng(m.latitude, m.longitude),
+              iconImage: 'AppMarker',
+            ))
+        .toList();
+
+    await _mapController?.clearSymbols();
+    await _mapController?.addSymbols(symbols);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MessageBloc, MessageState>(
+    return BlocConsumer<MessageBloc, MessageState>(
       listener: (context, state) async {
         if (state is MessageLoaded) {
-          final symbols = state.messages
-              .map((m) => SymbolOptions(
-                    geometry: LatLng(m.latitude, m.longitude),
-                    iconImage: 'AppMarker',
-                  ))
-              .toList();
-
-          await _mapController?.clearSymbols();
-          await _mapController?.addSymbols(symbols);
+          if (_mapController != null) {
+            _updateSymbols(state.messages);
+          }
         }
       },
-      child: MapboxMap(
-        accessToken: kMapBoxToken,
-        cameraTargetBounds: CameraTargetBounds(
-          LatLngBounds(
-            southwest: const LatLng(-12, 95),
-            northeast: const LatLng(12, 140),
-          ),
-        ),
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(0.7893, 113.9213),
-        ),
-        rotateGesturesEnabled: false,
-        onMapCreated: _onMapCreated,
-        onStyleLoadedCallback: _onStyleLoaded,
-        myLocationRenderMode: MyLocationRenderMode.NORMAL,
-      ),
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, state) {
+        if (state is MessageLoaded) {
+          return MapboxMap(
+            accessToken: kMapBoxToken,
+            cameraTargetBounds: CameraTargetBounds(
+              LatLngBounds(
+                southwest: const LatLng(-12, 95),
+                northeast: const LatLng(12, 140),
+              ),
+            ),
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(0.7893, 113.9213),
+            ),
+            rotateGesturesEnabled: false,
+            onMapCreated: _onMapCreated,
+            onStyleLoadedCallback: () => _onStyleLoaded(state.messages),
+            myLocationRenderMode: MyLocationRenderMode.NORMAL,
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }
