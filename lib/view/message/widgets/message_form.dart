@@ -17,6 +17,7 @@ class _MessageFormState extends State<MessageForm> {
   final _formKey = GlobalKey<FormState>();
   final _messageController = TextEditingController();
   bool _isLoading = false;
+  int _textLength = 0;
 
   @override
   void dispose() {
@@ -26,6 +27,8 @@ class _MessageFormState extends State<MessageForm> {
 
   @override
   Widget build(BuildContext context) {
+    _messageController.addListener(
+        () => setState(() => _textLength = _messageController.text.length));
     void _onSubmit() async {
       if (_formKey.currentState!.validate()) {
         setState(() => _isLoading = true);
@@ -52,30 +55,52 @@ class _MessageFormState extends State<MessageForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 0.75,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 0.75,
+                      ),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    child: TextFormField(
+                      controller: _messageController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        isCollapsed: true,
+                        counterText: '',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim() == '') {
+                          return "Tulis Harapan Kamu";
+                        }
+                        return null;
+                      },
+                      maxLines: null,
+                      maxLength: 160,
+                    ),
+                  ),
                 ),
-                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-              ),
-              child: TextFormField(
-                controller: _messageController,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                  isCollapsed: true,
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '${_textLength.toString()}/160',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.trim() == '') {
-                    return "Tulis Harapan Kamu";
-                  }
-                  return null;
-                },
-                maxLines: null,
-              ),
+              ],
             ),
           ),
           const SizedBox(height: 16.0),
