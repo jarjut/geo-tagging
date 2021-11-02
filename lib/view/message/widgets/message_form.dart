@@ -84,8 +84,13 @@ class _MessageFormState extends State<MessageForm> {
             height: 32.0,
             child: ElevatedButton(
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(const Color(0xff173a90)),
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.disabled)) {
+                    return Colors.grey;
+                  }
+                  return const Color(0xff173a90);
+                }),
               ),
               onPressed: _isLoading ? null : _onSubmit,
               child: const Text('SUBMIT'),

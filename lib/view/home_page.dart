@@ -102,6 +102,15 @@ class RequestLocation extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.disabled)) {
+                          return Colors.grey;
+                        }
+                        return const Color(0xff173a90);
+                      }),
+                    ),
                     onPressed: () {
                       BlocProvider.of<AppBloc>(context)
                           .add(AppCheckLocationPermission());
