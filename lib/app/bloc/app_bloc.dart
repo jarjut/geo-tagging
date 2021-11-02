@@ -27,6 +27,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppCheckLocationPermission>((event, emit) async {
       try {
         Location location = Location();
+        final serviceEnabled = await location.serviceEnabled();
+        if (!serviceEnabled) {
+          await location.requestService();
+        }
         final locationData = await location.getLocation();
 
         emit(AppLoaded(
