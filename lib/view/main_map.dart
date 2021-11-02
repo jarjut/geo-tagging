@@ -72,6 +72,7 @@ class MainMapState extends State<MainMap> {
             rotateGesturesEnabled: false,
             onMapCreated: _onMapCreated,
             onStyleLoadedCallback: () => _onStyleLoaded(state.messages),
+            styleString: 'mapbox://styles/jarjut/ckvhpi1av15i414oarkl73s2t',
             myLocationRenderMode: MyLocationRenderMode.NORMAL,
           );
         }
