@@ -31,16 +31,18 @@ class MessageChat extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4.0),
-        TextButton(
-          onPressed: () => context.read<MessageProvider>().showInput(),
-          child: const Text(
-            'Kembali',
-            style: TextStyle(
-              decoration: TextDecoration.underline,
-              color: Colors.grey,
-            ),
-          ),
-        ),
+        context.read<MessageProvider>().alreadySubmitted
+            ? const SizedBox.shrink()
+            : TextButton(
+                onPressed: () => context.read<MessageProvider>().showInput(),
+                child: const Text(
+                  'Kembali',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
       ],
     );
   }

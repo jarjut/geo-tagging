@@ -40,9 +40,9 @@ class _MessageFormState extends State<MessageForm> {
               ),
             );
 
-        setState(() => _isLoading = true);
+        setState(() => _isLoading = false);
 
-        context.read<MessageProvider>().showChat();
+        context.read<MessageProvider>().submit();
       }
     }
 
