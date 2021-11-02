@@ -37,6 +37,7 @@ class MainMapState extends State<MainMap> {
         .map((m) => SymbolOptions(
               geometry: LatLng(m.latitude, m.longitude),
               iconImage: 'AppMarker',
+              iconOffset: const Offset(0, -5),
             ))
         .toList();
 
