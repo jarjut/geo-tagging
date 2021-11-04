@@ -8,6 +8,7 @@ part of 'message.dart';
 
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       id: json['id'] as String?,
+      name: json['name'] as String?,
       message: json['message'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
@@ -26,6 +27,7 @@ Map<String, dynamic> _$MessageToJson(Message instance) {
   }
 
   writeNotNull('id', instance.id);
+  val['name'] = instance.name;
   val['message'] = instance.message;
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;

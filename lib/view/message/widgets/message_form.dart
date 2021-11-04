@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../../models/message.dart';
 import '../../../repository/message_repository.dart';
@@ -16,12 +17,14 @@ class MessageForm extends StatefulWidget {
 class _MessageFormState extends State<MessageForm> {
   final _formKey = GlobalKey<FormState>();
   final _messageController = TextEditingController();
+  final _nameController = TextEditingController();
   bool _isLoading = false;
   int _textLength = 0;
 
   @override
   void dispose() {
     _messageController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -34,12 +37,14 @@ class _MessageFormState extends State<MessageForm> {
         setState(() => _isLoading = true);
         final location = await Location().getLocation();
         final message = _messageController.text.trim();
+        final name = _nameController.text.trim();
 
         await context.read<MessageRepository>().addMessage(
               Message(
+                name: name == '' ? null : name,
                 message: message,
-                latitude: location.latitude!,
-                longitude: location.longitude!,
+                latitude: location.latitude ?? 0,
+                longitude: location.longitude ?? 0,
               ),
             );
 
@@ -51,6 +56,7 @@ class _MessageFormState extends State<MessageForm> {
 
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -103,7 +109,38 @@ class _MessageFormState extends State<MessageForm> {
               ],
             ),
           ),
-          const SizedBox(height: 16.0),
+          ScreenTypeLayout(
+            mobile: const SizedBox(height: 8.0),
+            desktop: const SizedBox(height: 16.0),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 12.0,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
+                width: 0.75,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+            ),
+            child: TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+                isCollapsed: true,
+                counterText: '',
+                hintText: 'Tulis nama kamu',
+              ),
+              maxLength: 20,
+            ),
+          ),
+          ScreenTypeLayout(
+            mobile: const SizedBox(height: 8.0),
+            desktop: const SizedBox(height: 16.0),
+          ),
           SizedBox(
             width: double.infinity,
             height: 32.0,

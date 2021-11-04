@@ -7,6 +7,7 @@ part 'message.g.dart';
 @JsonSerializable(includeIfNull: false)
 class Message extends Equatable {
   final String? id;
+  final String name;
   final String message;
   final double latitude;
   final double longitude;
@@ -14,11 +15,13 @@ class Message extends Equatable {
 
   Message({
     this.id,
+    String? name,
     required this.message,
     required this.latitude,
     required this.longitude,
     DateTime? created,
-  }) : created = created ?? DateTime.now();
+  })  : created = created ?? DateTime.now(),
+        name = name ?? 'Anonim';
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);
