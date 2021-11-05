@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geo_tagging/models/message.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../../consts.dart';
 import '../bloc/message_bloc.dart';
@@ -75,8 +74,8 @@ class MainMapState extends State<MainMap> {
               initialCameraPosition: const CameraPosition(
                 target: LatLng(0.7893, 113.9213),
               ),
-              scrollGesturesEnabled: !homeState.showMessage,
-              zoomGesturesEnabled: !homeState.showMessage,
+              scrollGesturesEnabled: homeState.mapGesture,
+              zoomGesturesEnabled: homeState.mapGesture,
               rotateGesturesEnabled: false,
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: () => _onStyleLoaded(state.messages),

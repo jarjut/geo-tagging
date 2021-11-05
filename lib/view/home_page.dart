@@ -52,6 +52,26 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class HomeProvider extends ChangeNotifier {
+  bool showMessage = true;
+  bool mapGesture = true;
+
+  void toggleMessage() {
+    showMessage = !showMessage;
+    notifyListeners();
+  }
+
+  void enableMapGesture() {
+    mapGesture = true;
+    notifyListeners();
+  }
+
+  void disableMapGesture() {
+    mapGesture = false;
+    notifyListeners();
+  }
+}
+
 class MessageContainer extends StatelessWidget {
   const MessageContainer({
     Key? key,
@@ -99,26 +119,31 @@ class MessageContainer extends StatelessWidget {
           bottom: _bottom,
           right: _right,
           left: _left,
-          child: AnimatedContainer(
-            duration: _animationDuration,
-            decoration: const BoxDecoration(
-              color: Colors.white60,
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            ),
-            height: homeState.showMessage ? _height : 64,
-            width: homeState.showMessage ? _width : 64,
-            child: AnimatedCrossFade(
+          child: MouseRegion(
+            onEnter: (_) => homeState.disableMapGesture(),
+            onExit: (_) => homeState.enableMapGesture(),
+            child: AnimatedContainer(
               duration: _animationDuration,
-              crossFadeState: homeState.showMessage
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              firstChild: const MessageSection(),
-              secondChild: Center(
-                child: IconButton(
-                  onPressed: () => context.read<HomeProvider>().toggleMessage(),
-                  icon: Icon(
-                    Icons.message,
-                    color: Colors.blue.shade900,
+              decoration: const BoxDecoration(
+                color: Colors.white60,
+                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              ),
+              height: homeState.showMessage ? _height : 64,
+              width: homeState.showMessage ? _width : 64,
+              child: AnimatedCrossFade(
+                duration: _animationDuration,
+                crossFadeState: homeState.showMessage
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                firstChild: const MessageSection(),
+                secondChild: Center(
+                  child: IconButton(
+                    onPressed: () =>
+                        context.read<HomeProvider>().toggleMessage(),
+                    icon: Icon(
+                      Icons.message,
+                      color: Colors.blue.shade900,
+                    ),
                   ),
                 ),
               ),
@@ -127,15 +152,6 @@ class MessageContainer extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class HomeProvider extends ChangeNotifier {
-  bool showMessage = true;
-
-  void toggleMessage() {
-    showMessage = !showMessage;
-    notifyListeners();
   }
 }
 
