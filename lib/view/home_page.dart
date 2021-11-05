@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../app/bloc/app_bloc.dart';
 import '../repository/message_repository.dart';
 import 'bloc/message_bloc.dart';
-import 'main_map.dart';
+import 'map/main_map.dart';
 import 'message/message_section.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,55 +18,127 @@ class HomePage extends StatelessWidget {
       create: (context) => MessageBloc(
         messageRepository: RepositoryProvider.of<MessageRepository>(context),
       )..add(LoadMessage()),
-      child: Scaffold(
-        body: BlocBuilder<AppBloc, AppState>(
-          builder: (context, state) {
-            if (state is AppLoaded) {
-              return Stack(
-                children: [
-                  ScreenTypeLayout.builder(
-                    mobile: (context) => Stack(
-                      children: [
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: MediaQuery.of(context).size.height * 4 / 9,
-                          child: const MainMap(),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          height: MediaQuery.of(context).size.height * 5 / 9,
-                          child: const MessageSection(),
-                        ),
-                      ],
+      child: ChangeNotifierProvider(
+        create: (_) => HomeProvider(),
+        child: Scaffold(
+          body: BlocBuilder<AppBloc, AppState>(
+            builder: (context, state) {
+              if (state is AppLoaded) {
+                return Stack(
+                  children: [
+                    ScreenTypeLayout(
+                      mobile: Stack(
+                        children: [
+                          const Positioned.fill(child: MainMap()),
+                          Consumer<HomeProvider>(
+                              builder: (context, homeState, _) {
+                            return Positioned(
+                              bottom: 16,
+                              right: 16,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16.0)),
+                                ),
+                                height: homeState.showMessage
+                                    ? MediaQuery.of(context).size.height *
+                                        (4 / 5)
+                                    : 64,
+                                width: homeState.showMessage
+                                    ? MediaQuery.of(context).size.width - 32
+                                    : 64,
+                                child: AnimatedCrossFade(
+                                  duration: const Duration(milliseconds: 250),
+                                  crossFadeState: homeState.showMessage
+                                      ? CrossFadeState.showFirst
+                                      : CrossFadeState.showSecond,
+                                  firstChild: const MessageSection(),
+                                  secondChild: Center(
+                                    child: IconButton(
+                                      onPressed: () => context
+                                          .read<HomeProvider>()
+                                          .toggleMessage(),
+                                      icon: Icon(
+                                        Icons.message,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                      desktop: Stack(
+                        children: [
+                          const Positioned.fill(child: MainMap()),
+                          Consumer<HomeProvider>(
+                              builder: (context, homeState, _) {
+                            return Positioned(
+                              bottom: 32,
+                              left: 32,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16.0)),
+                                ),
+                                height: homeState.showMessage
+                                    ? MediaQuery.of(context).size.height - 64
+                                    : 64,
+                                width: homeState.showMessage ? 320 : 64,
+                                child: AnimatedCrossFade(
+                                  duration: const Duration(milliseconds: 250),
+                                  crossFadeState: homeState.showMessage
+                                      ? CrossFadeState.showFirst
+                                      : CrossFadeState.showSecond,
+                                  firstChild: const MessageSection(),
+                                  secondChild: Center(
+                                    child: IconButton(
+                                      onPressed: () => context
+                                          .read<HomeProvider>()
+                                          .toggleMessage(),
+                                      icon: Icon(
+                                        Icons.message,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ),
-                    desktop: (context) => Row(
-                      children: const [
-                        SizedBox(
-                          width: 320,
-                          child: MessageSection(),
-                        ),
-                        Expanded(child: MainMap()),
-                      ],
-                    ),
-                  ),
-                  !state.hasPermission
-                      ? const RequestLocation()
-                      : const SizedBox.shrink(),
-                ],
-              );
-            }
+                    !state.hasPermission
+                        ? const RequestLocation()
+                        : const SizedBox.shrink(),
+                  ],
+                );
+              }
 
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ),
       ),
     );
+  }
+}
+
+class HomeProvider extends ChangeNotifier {
+  bool showMessage = true;
+
+  void toggleMessage() {
+    showMessage = !showMessage;
+    notifyListeners();
   }
 }
 

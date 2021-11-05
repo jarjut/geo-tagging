@@ -43,4 +43,22 @@ class Message extends Equatable {
 
   @override
   List<Object?> get props => [id, message, latitude, longitude];
+
+  Message copyWith({
+    String? id,
+    String? name,
+    String? message,
+    double? latitude,
+    double? longitude,
+    DateTime? created,
+  }) {
+    return Message(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      message: message ?? this.message,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      created: created ?? this.created,
+    );
+  }
 }

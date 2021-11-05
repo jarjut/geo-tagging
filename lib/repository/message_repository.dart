@@ -7,7 +7,9 @@ class MessageRepository {
 
   Future<void> addMessage(Message message) async {
     try {
-      await _messageRef.add(message);
+      final newMessageRef = _messageRef.doc();
+      final id = newMessageRef.id;
+      newMessageRef.set(message.copyWith(id: id));
     } catch (e) {
       log('Failed to add message', error: e);
     }

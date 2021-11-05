@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -5,9 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geo_tagging/models/message.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
-import '../../consts.dart';
-import 'bloc/message_bloc.dart';
+import '../../../consts.dart';
+import '../bloc/message_bloc.dart';
+import '../home_page.dart';
 
 class MainMap extends StatefulWidget {
   const MainMap({Key? key}) : super(key: key);
@@ -58,24 +62,27 @@ class MainMapState extends State<MainMap> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         if (state is MessageLoaded) {
-          return MapboxMap(
-            accessToken: kMapBoxToken,
-            cameraTargetBounds: CameraTargetBounds(
-              LatLngBounds(
-                southwest: const LatLng(-12, 95),
-                northeast: const LatLng(12, 140),
+          return Consumer<HomeProvider>(builder: (context, homeState, _) {
+            return MapboxMap(
+              accessToken: kMapBoxToken,
+              cameraTargetBounds: CameraTargetBounds(
+                LatLngBounds(
+                  southwest: const LatLng(-12, 93),
+                  northeast: const LatLng(12, 143),
+                ),
               ),
-            ),
-            minMaxZoomPreference: const MinMaxZoomPreference(null, 6),
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(0.7893, 113.9213),
-            ),
-            rotateGesturesEnabled: false,
-            onMapCreated: _onMapCreated,
-            onStyleLoadedCallback: () => _onStyleLoaded(state.messages),
-            styleString: 'mapbox://styles/jarjut/ckvhpi1av15i414oarkl73s2t',
-            myLocationRenderMode: MyLocationRenderMode.NORMAL,
-          );
+              // minMaxZoomPreference: const MinMaxZoomPreference(null, 6),
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(0.7893, 113.9213),
+              ),
+              scrollGesturesEnabled: !homeState.showMessage,
+              zoomGesturesEnabled: !homeState.showMessage,
+              rotateGesturesEnabled: false,
+              onMapCreated: _onMapCreated,
+              onStyleLoadedCallback: () => _onStyleLoaded(state.messages),
+              // styleString: 'mapbox://styles/jarjut/ckvhpi1av15i414oarkl73s2t',
+            );
+          });
         }
         return const Center(
           child: CircularProgressIndicator(),
