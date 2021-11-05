@@ -9,6 +9,8 @@ import 'bloc/message_bloc.dart';
 import 'map/main_map.dart';
 import 'message/message_section.dart';
 
+const _animationDuration = Duration(milliseconds: 200);
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -26,98 +28,11 @@ class HomePage extends StatelessWidget {
               if (state is AppLoaded) {
                 return Stack(
                   children: [
-                    ScreenTypeLayout(
-                      mobile: Stack(
-                        children: [
-                          const Positioned.fill(child: MainMap()),
-                          Consumer<HomeProvider>(
-                              builder: (context, homeState, _) {
-                            return Positioned(
-                              bottom: 16,
-                              right: 16,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white54,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(16.0)),
-                                ),
-                                height: homeState.showMessage
-                                    ? MediaQuery.of(context).size.height *
-                                        (4 / 5)
-                                    : 64,
-                                width: homeState.showMessage
-                                    ? MediaQuery.of(context).size.width - 32
-                                    : 64,
-                                child: AnimatedCrossFade(
-                                  duration: const Duration(milliseconds: 250),
-                                  crossFadeState: homeState.showMessage
-                                      ? CrossFadeState.showFirst
-                                      : CrossFadeState.showSecond,
-                                  firstChild: const MessageSection(),
-                                  secondChild: Center(
-                                    child: IconButton(
-                                      onPressed: () => context
-                                          .read<HomeProvider>()
-                                          .toggleMessage(),
-                                      icon: Icon(
-                                        Icons.message,
-                                        color: Colors.blue.shade900,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                      desktop: Stack(
-                        children: [
-                          const Positioned.fill(child: MainMap()),
-                          Consumer<HomeProvider>(
-                              builder: (context, homeState, _) {
-                            return Positioned(
-                              bottom: 32,
-                              left: 32,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white54,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(16.0)),
-                                ),
-                                height: homeState.showMessage
-                                    ? MediaQuery.of(context).size.height - 64
-                                    : 64,
-                                width: homeState.showMessage ? 320 : 64,
-                                child: AnimatedCrossFade(
-                                  duration: const Duration(milliseconds: 250),
-                                  crossFadeState: homeState.showMessage
-                                      ? CrossFadeState.showFirst
-                                      : CrossFadeState.showSecond,
-                                  firstChild: const MessageSection(),
-                                  secondChild: Center(
-                                    child: IconButton(
-                                      onPressed: () => context
-                                          .read<HomeProvider>()
-                                          .toggleMessage(),
-                                      icon: Icon(
-                                        Icons.message,
-                                        color: Colors.blue.shade900,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                    !state.hasPermission
-                        ? const RequestLocation()
-                        : const SizedBox.shrink(),
+                    const Positioned.fill(child: MainMap()),
+                    MessageContainer(animationDuration: _animationDuration),
+                    // !state.hasPermission
+                    //     ? const RequestLocation()
+                    //     : const SizedBox.shrink(),
                   ],
                 );
               }
@@ -129,6 +44,84 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class MessageContainer extends StatelessWidget {
+  const MessageContainer({
+    Key? key,
+    required Duration animationDuration,
+  })  : _animationDuration = animationDuration,
+        super(key: key);
+
+  final Duration _animationDuration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<HomeProvider>(
+      builder: (context, homeState, _) {
+        const _desktopCardMargin = 32.0;
+        const _mobileCardMargin = 16.0;
+        final _deviceType = getDeviceType(MediaQuery.of(context).size);
+        final _isMobile = _deviceType == DeviceScreenType.mobile ||
+            _deviceType == DeviceScreenType.tablet;
+
+        final _bottom = _isMobile ? _mobileCardMargin : _desktopCardMargin;
+        final _right = _isMobile ? _mobileCardMargin : null;
+        final _left = _isMobile ? null : _desktopCardMargin;
+
+        final _screenWidth = MediaQuery.of(context).size.width;
+        final _screenHeight = MediaQuery.of(context).size.height;
+
+        final _desktopHeight = _screenHeight - (_desktopCardMargin * 2);
+        final _mobileHeight = _screenHeight * 0.5;
+
+        const _desktopWidth = 320.0;
+        final _mobileWidth = _screenWidth - (_mobileCardMargin * 2);
+
+        final _height = getValueForScreenType<double?>(
+          context: context,
+          mobile: _mobileHeight,
+          desktop: _desktopHeight,
+        );
+        final _width = getValueForScreenType<double?>(
+          context: context,
+          mobile: _mobileWidth,
+          desktop: _desktopWidth,
+        );
+
+        return Positioned(
+          bottom: _bottom,
+          right: _right,
+          left: _left,
+          child: AnimatedContainer(
+            duration: _animationDuration,
+            decoration: const BoxDecoration(
+              color: Colors.white60,
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
+            height: homeState.showMessage ? _height : 64,
+            width: homeState.showMessage ? _width : 64,
+            child: AnimatedCrossFade(
+              duration: _animationDuration,
+              crossFadeState: homeState.showMessage
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              firstChild: const MessageSection(),
+              secondChild: Center(
+                child: IconButton(
+                  onPressed: () => context.read<HomeProvider>().toggleMessage(),
+                  icon: Icon(
+                    Icons.message,
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
