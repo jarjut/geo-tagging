@@ -15,7 +15,7 @@ class MessageInput extends StatelessWidget {
         horizontal: 16.0,
         vertical: getValueForScreenType<double>(
           context: context,
-          mobile: 8.0,
+          mobile: 0.0,
           desktop: 24.0,
         ),
       ),

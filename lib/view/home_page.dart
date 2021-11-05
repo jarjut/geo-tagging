@@ -66,7 +66,7 @@ class MessageContainer extends StatelessWidget {
     return Consumer<HomeProvider>(
       builder: (context, homeState, _) {
         const _desktopCardMargin = 32.0;
-        const _mobileCardMargin = 16.0;
+        const _mobileCardMargin = 12.0;
         final _deviceType = getDeviceType(MediaQuery.of(context).size);
         final _isMobile = _deviceType == DeviceScreenType.mobile ||
             _deviceType == DeviceScreenType.tablet;
@@ -79,7 +79,7 @@ class MessageContainer extends StatelessWidget {
         final _screenHeight = MediaQuery.of(context).size.height;
 
         final _desktopHeight = _screenHeight - (_desktopCardMargin * 2);
-        final _mobileHeight = _screenHeight * 0.5;
+        final _mobileHeight = _screenHeight * 0.6;
 
         const _desktopWidth = 320.0;
         final _mobileWidth = _screenWidth - (_mobileCardMargin * 2);
