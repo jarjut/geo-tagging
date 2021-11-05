@@ -35,16 +35,21 @@ class _MessageFormState extends State<MessageForm> {
     void _onSubmit() async {
       if (_formKey.currentState!.validate()) {
         setState(() => _isLoading = true);
-        final location = await Location().getLocation();
         final message = _messageController.text.trim();
         final name = _nameController.text.trim();
+        LocationData? location;
+        try {
+          location = await Location().getLocation();
+        } catch (e) {
+          location = null;
+        }
 
         await context.read<MessageRepository>().addMessage(
               Message(
                 name: name == '' ? null : name,
                 message: message,
-                latitude: location.latitude ?? 0,
-                longitude: location.longitude ?? 0,
+                latitude: location?.latitude ?? 0,
+                longitude: location?.longitude ?? 0,
               ),
             );
 

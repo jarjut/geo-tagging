@@ -42,5 +42,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         emit(const AppLoaded());
       }
     });
+
+    on<AppBypassPermission>((event, emit) async {
+      emit(const AppLoaded(hasPermission: true));
+    });
   }
 }

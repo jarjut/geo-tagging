@@ -26,18 +26,28 @@ class HomePage extends StatelessWidget {
           body: BlocBuilder<AppBloc, AppState>(
             builder: (context, state) {
               if (state is AppLoaded) {
-                return Stack(
-                  children: [
-                    Stack(
-                      children: const [
-                        Positioned.fill(child: MainMap()),
-                        MessageContainer(animationDuration: _animationDuration),
-                      ],
-                    ),
-                    state.hasPermission
-                        ? const SizedBox.shrink()
-                        : const RequestLocation(),
-                  ],
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: Stack(
+                          children: [
+                            Stack(
+                              children: const [
+                                Positioned.fill(child: MainMap()),
+                                MessageContainer(
+                                    animationDuration: _animationDuration),
+                              ],
+                            ),
+                            state.hasPermission
+                                ? const SizedBox.shrink()
+                                : const RequestLocation(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }
 
@@ -155,9 +165,15 @@ class MessageContainer extends StatelessWidget {
   }
 }
 
-class RequestLocation extends StatelessWidget {
+class RequestLocation extends StatefulWidget {
   const RequestLocation({Key? key}) : super(key: key);
 
+  @override
+  State<RequestLocation> createState() => _RequestLocationState();
+}
+
+class _RequestLocationState extends State<RequestLocation> {
+  int _requestCount = 0;
   @override
   Widget build(BuildContext context) {
     return Positioned.fill(
@@ -198,8 +214,14 @@ class RequestLocation extends StatelessWidget {
                       }),
                     ),
                     onPressed: () {
-                      BlocProvider.of<AppBloc>(context)
-                          .add(AppCheckLocationPermission());
+                      _requestCount++;
+                      if (_requestCount > 3) {
+                        BlocProvider.of<AppBloc>(context)
+                            .add(AppBypassPermission());
+                      } else {
+                        BlocProvider.of<AppBloc>(context)
+                            .add(AppCheckLocationPermission());
+                      }
                     },
                     child: const Text(
                       'CHECK PERMISSION',
