@@ -28,11 +28,15 @@ class HomePage extends StatelessWidget {
               if (state is AppLoaded) {
                 return Stack(
                   children: [
-                    const Positioned.fill(child: MainMap()),
-                    MessageContainer(animationDuration: _animationDuration),
-                    // !state.hasPermission
-                    //     ? const RequestLocation()
-                    //     : const SizedBox.shrink(),
+                    Stack(
+                      children: const [
+                        Positioned.fill(child: MainMap()),
+                        MessageContainer(animationDuration: _animationDuration),
+                      ],
+                    ),
+                    state.hasPermission
+                        ? const SizedBox.shrink()
+                        : const RequestLocation(),
                   ],
                 );
               }
