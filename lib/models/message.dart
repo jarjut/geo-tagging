@@ -11,7 +11,7 @@ class Message extends Equatable {
   final String message;
   final double latitude;
   final double longitude;
-  final DateTime created;
+  final dynamic created;
 
   Message({
     this.id,
@@ -19,8 +19,8 @@ class Message extends Equatable {
     required this.message,
     required this.latitude,
     required this.longitude,
-    DateTime? created,
-  })  : created = created ?? DateTime.now(),
+    dynamic created,
+  })  : created = created ?? FieldValue.serverTimestamp(),
         name = name ?? 'Anonim';
 
   factory Message.fromJson(Map<String, dynamic> json) =>
@@ -50,7 +50,7 @@ class Message extends Equatable {
     String? message,
     double? latitude,
     double? longitude,
-    DateTime? created,
+    dynamic created,
   }) {
     return Message(
       id: id ?? this.id,
